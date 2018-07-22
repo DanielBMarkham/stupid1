@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>stupid1</name></assembly>
+<members>
+<member name="T:SystemTypes.OptionExampleProgramConfig">
+<summary>
+ Command-line parameters for this particular (easyam) program
+</summary>
+</member>
+<member name="T:SystemTypes.InterimProgress">
+<summary>
+ A type so that programs can report what they&apos;re doing as they do it
+</summary>
+</member>
+<member name="T:SystemTypes.ConfigEntry`1">
+<summary>
+ Parameterized type to allow command-line argument processing without a lot of extra coder work
+ Instantiate the type with the type of value you want. Make a default entry in case nothing is found
+ Then call the populate method. Will pull from args and return a val and args with the found value (if any consumed)
+</summary>
+</member>
+<member name="T:SystemTypes.UserNeedsHelp">
+<summary>
+ Command-line parameters for this particular (OptionExample) program
+</summary>
+</member>
+<member name="M:SystemUtils.commandLinePrintWhileExit(SystemTypes.ConfigBase)">
+<summary>
+ Exiting program command line report. Detail level is based on verbosity setting
+</summary>
+</member>
+<member name="M:SystemUtils.commandLinePrintWhileEnter(SystemTypes.ConfigBase,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+<summary>
+ Prints out the options for the command before it runs. Detail level is based on verbosity setting
+</summary>
+</member>
+<member name="M:SystemTests.getFakeFileName">
+<summary>
+ Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing
+</summary>
+</member>
+<member name="M:AppUtils.groupAndSumKV(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Int32}})">
+<summary>
+ Takes a name=value collection and sums by name
+</summary>
+</member>
+</members>
+</doc>
