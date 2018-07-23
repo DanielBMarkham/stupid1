@@ -34,6 +34,11 @@
  Prints out the options for the command before it runs. Detail level is based on verbosity setting
 </summary>
 </member>
+<member name="P:SystemUtils.isLinuxFileSystem">
+<summary>
+ Are we running on linux?
+</summary>
+</member>
 <member name="M:SystemTests.getFakeFileName">
 <summary>
  Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing

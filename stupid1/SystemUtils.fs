@@ -1,5 +1,17 @@
 ﻿module SystemUtils
 open SystemTypes
+open System
+
+/// Are we running on linux?
+let isLinuxFileSystem =
+    let os = System.Environment.OSVersion
+    let platformId = os.Platform
+    match platformId with
+        | PlatformID.Win32NT | PlatformID.Win32S | PlatformID.Win32Windows | PlatformID.WinCE | PlatformID.Xbox -> false
+        | PlatformID.MacOSX | PlatformID.Unix -> true
+        | _ ->false
+type MajorTypeOfOS = Windows|Linux 
+let MajorOSType = if isLinuxFileSystem then Linux else Windows
 
 let inline tryParseGeneric<
     'a when ^a : (static member TryParse : string * ^a byref -> bool)

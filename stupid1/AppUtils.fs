@@ -12,12 +12,12 @@ let groupAndSumKV (optionLines:seq<System.Collections.Generic.KeyValuePair<strin
         let sumOfGroupedData=snd x |> Seq.sumBy(fun x->x.Value)
         (fst x, sumOfGroupedData)
         )
-let groupAndSum (optionLines:seq<NameNumberPairType>) =
+let groupAndSum (optionLines:seq<OptionExampleFileLineType>) =
     optionLines 
         |> Seq.map(fun x->x.ToKVPair) 
         |> groupAndSumKV
         |> Seq.map(fun x->
-            OptionExampleFileLine.FromKVPairString 
+            OptionExampleFileLineType.FromKVPairString 
                 (System.Collections.Generic.KeyValuePair<string,int>(fst x, snd x))
             )
 let doStuff (opts:OptionExampleProgramConfig) =
@@ -30,7 +30,7 @@ let doStuff (opts:OptionExampleProgramConfig) =
         else 
             System.IO.File.ReadAllNameValueLines (fst opts.inputFile.parameterValue)
     // we want kv lines with alpha for key and number for value
-    let optionLines = OptionExampleFileLines.FromStringKVCollection keyValuesFromFile
+    let optionLines = OptionExampleFileLinesType.FromStringKVCollection keyValuesFromFile
     match opts.outputFormat with
         |Html->printfn "Hey there"
         |_->

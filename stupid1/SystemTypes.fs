@@ -1,5 +1,7 @@
 ﻿module SystemTypes
 
+let OSNewLine=System.Environment.NewLine
+
 let lineContainsADelimiter (delimiter:char) (line:string) = line.Contains(string delimiter)
 let lineOnlyHasTwoPieces (delimiter:char) (line:string) = line.Split([|delimiter|]).Length=2
 let splitLineIfPossibleIntoTwoPieces (delimiter:char) (line:string)  =

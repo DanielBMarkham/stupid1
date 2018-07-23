@@ -2,49 +2,41 @@
 open SystemTypes
 open SystemUtils
 
-type NameNumberPairType = { Name:string;Number:int} with
-        member self.ToHtml() =
-            "<div class='NameNumberPairTypeItem'><span class='NameNumberPairTypeItemName'>"
-            + self.Name + "</span>="
-            + "<span class='NameNumberPairTypeItemNumber'>"
-            + self.Number.ToString() + "</span></div>"
-        override self.ToString() =
-        self.Name + "=" + self.Number.ToString()
-        static member FromString (s:string) = 
-            let split=splitLineIfPossibleIntoTwoPieces '=' s
-            if split.IsNone then None
-            else
-                let tryParseInt = tryParseGeneric<int> (snd split.Value)
-                if tryParseInt.IsNone then None
-                else Some {Name=fst split.Value; Number=tryParseInt.Value}
-        member self.ToKVPair = 
-            System.Collections.Generic.KeyValuePair<string,int>(self.Name, self.Number)
-        static member FromKVPair 
-            (pair:System.Collections.Generic.KeyValuePair<string,int>) =
-            {Name=pair.Key;Number=pair.Value}
-type OptionExampleFileLine = private NameNumberPair of NameNumberPairType with
+type OptionExampleFileLineType = 
+    private { Name:string;Number:int} with
     static member FromKVPairString (kv:System.Collections.Generic.KeyValuePair<string,int>) =
-        NameNumberPairType.FromKVPair kv
+        {Name=kv.Key;Number=kv.Value}
     static member FromNameAndNumber (name:string) (number:int) =
         {Name=name; Number=number}
-type OptionExampleFileLines = private OptionExampleFileLines of OptionExampleFileLine[] with
+    static member FromKVPair 
+        (pair:System.Collections.Generic.KeyValuePair<string,int>) =
+        {Name=pair.Key;Number=pair.Value}
+    static member FromString (s:string) = 
+        let split=splitLineIfPossibleIntoTwoPieces '=' s
+        if split.IsNone then None
+        else
+            let tryParseInt = tryParseGeneric<int> (snd split.Value)
+            if tryParseInt.IsNone then None
+            else Some {Name=fst split.Value; Number=tryParseInt.Value}
+    override self.ToString() =
+    self.Name + "=" + self.Number.ToString()
     member self.ToHtml() =
-        let makeItemIntoHtmlLIItem (item:NameNumberPairType) =
-            "<li class='OptionExampleFileLinesItem'>"
-            + item.ToHtml()
-            + "</li>\l\n"
-        let makeItemsIntoHtmlItemList (items:NameNumberPairType[]) = 
-            items |> Array.map(fun x->
-                "<li class='NameNumberPairTypeListItem'>"
-                + (makeItemIntoHtmlLIItem x) +
-                "</li>\l\n"
-                )                
-        "<div class='OptionExampleFileLines'><ul class='OptionExampleFileLinesList'>\l\n"
-        + "Option List List goes here"
-        // Next line doesn't work
-        //+ (makeItemsIntoHtmlItemList self.OptionExampleFileLines)
-        + "</ul></div>\l\n"
-            
+        "<div class='NameNumberPairTypeItem'><span class='NameNumberPairTypeItemName'>"
+        + self.Name + "</span>="
+        + "<span class='NameNumberPairTypeItemNumber'>"
+        + self.Number.ToString() + "</span></div>"
+    member self.ToKVPair = 
+        System.Collections.Generic.KeyValuePair<string,int>(self.Name, self.Number)
+type OptionExampleFileLinesType = 
+    private {OptionExampleFileLines:OptionExampleFileLineType[]} with
+    static member FromSeq (lines:seq<OptionExampleFileLineType>)=
+        {OptionExampleFileLines=lines|>Seq.toArray}
+    static member FromTypedCollection 
+        (keyValueCollection:System.Collections.Generic.KeyValuePair<string,int> seq) =
+            keyValueCollection 
+            |> Seq.map(fun x->OptionExampleFileLineType.FromKVPair x)
+            |> Seq.toArray
+            |> OptionExampleFileLinesType.FromSeq
     static member FromStringKVCollection 
         (keyValueCollection:System.Collections.Generic.KeyValuePair<string,string> seq) =
         /// Process anything with alpha=number, ignore the rest
@@ -59,13 +51,24 @@ type OptionExampleFileLines = private OptionExampleFileLines of OptionExampleFil
             && (fst (tryParsingValueIntoAnInteger pair) = true)
         let optionLines = keyValueCollection 
                         |> Seq.filter(fun x->doesKVWorkForUs x)
-                        |> Seq.map(fun x->OptionExampleFileLine.FromNameAndNumber
+                        |> Seq.map(fun x->OptionExampleFileLineType.FromNameAndNumber
                                             x.Key (snd (tryParsingValueIntoAnInteger x)))
         optionLines
-    static member FromTypedCollection 
-        (keyValueCollection:System.Collections.Generic.KeyValuePair<string,int> seq) =
-            keyValueCollection |> Seq.map(fun x->NameNumberPairType.FromKVPair x)
     static member FromStrings (strings:seq<string>) =
-        strings |> Seq.map(fun x-> NameNumberPairType.FromString x) |> Seq.choose id
+        strings |> Seq.map(fun x-> OptionExampleFileLineType.FromString x) |> Seq.choose id
+    member self.ToHtml() =
+        let makeItemIntoHtmlLIItem (item:OptionExampleFileLineType) =
+            "<li class='OptionExampleFileLinesItem'>" + OSNewLine
+            + item.ToHtml()
+            + "</li>" + OSNewLine
+        let makeItemsIntoHtmlItemList (items:OptionExampleFileLineType[]) = 
+            items |> Array.map(fun x->
+                "<li class='NameNumberPairTypeListItem'>" + OSNewLine
+                + (makeItemIntoHtmlLIItem x) + OSNewLine +
+                "</li>" + OSNewLine
+                ) |> String.concat ""         
+        "<div class='OptionExampleFileLines'><ul class='OptionExampleFileLinesList'>" + OSNewLine
+        + (makeItemsIntoHtmlItemList self.OptionExampleFileLines)
+        + "</ul></div>" + OSNewLine
 
 
