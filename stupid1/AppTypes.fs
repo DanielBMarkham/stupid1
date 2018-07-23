@@ -3,6 +3,11 @@ open SystemTypes
 open SystemUtils
 
 type NameNumberPairType = { Name:string;Number:int} with
+        member self.ToHtml() =
+            "<div class='NameNumberPairTypeItem'><span class='NameNumberPairTypeItemName'>"
+            + self.Name + "</span>="
+            + "<span class='NameNumberPairTypeItemNumber'>"
+            + self.Number.ToString() + "</span></div>"
         override self.ToString() =
         self.Name + "=" + self.Number.ToString()
         static member FromString (s:string) = 
@@ -23,6 +28,23 @@ type OptionExampleFileLine = private NameNumberPair of NameNumberPairType with
     static member FromNameAndNumber (name:string) (number:int) =
         {Name=name; Number=number}
 type OptionExampleFileLines = private OptionExampleFileLines of OptionExampleFileLine[] with
+    member self.ToHtml() =
+        let makeItemIntoHtmlLIItem (item:NameNumberPairType) =
+            "<li class='OptionExampleFileLinesItem'>"
+            + item.ToHtml()
+            + "</li>\l\n"
+        let makeItemsIntoHtmlItemList (items:NameNumberPairType[]) = 
+            items |> Array.map(fun x->
+                "<li class='NameNumberPairTypeListItem'>"
+                + (makeItemIntoHtmlLIItem x) +
+                "</li>\l\n"
+                )                
+        "<div class='OptionExampleFileLines'><ul class='OptionExampleFileLinesList'>\l\n"
+        + "Option List List goes here"
+        // Next line doesn't work
+        //+ (makeItemsIntoHtmlItemList self.OptionExampleFileLines)
+        + "</ul></div>\l\n"
+            
     static member FromStringKVCollection 
         (keyValueCollection:System.Collections.Generic.KeyValuePair<string,string> seq) =
         /// Process anything with alpha=number, ignore the rest

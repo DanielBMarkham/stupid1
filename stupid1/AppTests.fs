@@ -35,5 +35,21 @@ let ``groupAndSum: Initial test file``() =
     Assert.AreEqual({Name="a";Number=22}, ret.[0])
     Assert.AreEqual({Name="b";Number=12}, ret.[1])
     Assert.AreEqual({Name="c";Number=21}, ret.[2])
+[<Test>]
+let ``NameNumberPairType: ToHtml``() = 
+    let input=OptionExampleFileLines.FromStrings initialTestFile |> Seq.toArray
+    let ret=groupAndSum input |> Seq.toArray
+    Assert.AreEqual
+        ("<div class='NameNumberPairTypeItem'><span class='NameNumberPairTypeItemName'>\
+        a</span>=<span class='NameNumberPairTypeItemNumber'>22</span></div>"
+        , ret.[0].ToHtml())
+[<Test>]
+let ``OptionExampleFileLines: ToHtml``() = 
+    let input=OptionExampleFileLines.FromStrings initialTestFile |> Seq.toArray
+    let ret=groupAndSum input |> Seq.toArray
+    Assert.AreEqual
+        ("<div class='NameNumberPairTypeItem'><span class='NameNumberPairTypeItemName'>\
+        a</span>=<span class='NameNumberPairTypeItemNumber'>22</span></div>"
+        , ret.ToHtml())
 
 
