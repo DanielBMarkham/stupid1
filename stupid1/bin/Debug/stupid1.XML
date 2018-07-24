@@ -34,6 +34,17 @@
  Prints out the options for the command before it runs. Detail level is based on verbosity setting
 </summary>
 </member>
+<member name="M:SystemUtils.wrapFragmentIntoAnHtmlPageWebServerReturnString(System.String,System.String,System.String,System.String)">
+<summary>
+ Takes a title, css file, javascript file, and contents
+ Makes a basic html return string to send to the Apache controller
+</summary>
+</member>
+<member name="M:SystemUtils.groupAndSumKV(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Int32}})">
+<summary>
+ Takes a name=value collection and sums by name
+</summary>
+</member>
 <member name="P:SystemUtils.isLinuxFileSystem">
 <summary>
  Are we running on linux?
@@ -42,11 +53,6 @@
 <member name="M:SystemTests.getFakeFileName">
 <summary>
  Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing
-</summary>
-</member>
-<member name="M:AppUtils.groupAndSumKV(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Int32}})">
-<summary>
- Takes a name=value collection and sums by name
 </summary>
 </member>
 </members>

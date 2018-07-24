@@ -13,13 +13,40 @@ let isLinuxFileSystem =
 type MajorTypeOfOS = Windows|Linux 
 let MajorOSType = if isLinuxFileSystem then Linux else Windows
 
-let inline tryParseGeneric<
-    'a when ^a : (static member TryParse : string * ^a byref -> bool)
-    and  ^a : (new:unit->'a)
-    > text : 'a option =
-    let n =  ref (new 'a())
-    let ret = (^a : (static member TryParse: string * ^a byref -> bool) (text,&n.contents))
-    if ret then Some (n.Value) else None
+/// Takes a name=value collection and sums by name
+let groupAndSumKV (optionLines:seq<System.Collections.Generic.KeyValuePair<string,int>>) =
+    optionLines
+    |> Seq.groupBy(fun x->x.Key) 
+    |> Seq.sortBy fst
+    |> Seq.map(fun x->
+        let sumOfGroupedData=snd x |> Seq.sumBy(fun x->x.Value)
+        (fst x, sumOfGroupedData)
+        )
+/// Takes a title, css file, javascript file, and contents
+/// Makes a basic html return string to send to the Apache controller
+let wrapFragmentIntoAnHtmlPageWebServerReturnString 
+    (title:string) 
+    (cssFile:string) 
+    (javascriptFile:string) 
+    (contents:string) =
+    let ret  =  "Content-Type: text/html\r\n\r\n"
+                + "<!DOCTYPE html>" 
+                + OSNewLine + "<html>" 
+                + OSNewLine + "<head>"
+                + OSNewLine + "<title>"
+                + title + "</title>"
+                + OSNewLine + "<link rel='stylesheet' type='text/css' media='all' href='"
+                + cssFile + "' />" 
+                + OSNewLine + "	<script src='"
+                + javascriptFile + "'></script>"
+                + OSNewLine + "</head>\n"
+                + OSNewLine + "<body>"
+                + OSNewLine + contents
+                + OSNewLine + "</body></html>"
+    ret
+
+
+
 
 let createNewBaseOptions programName programTagLine programHelpText verbose =
     {
@@ -29,8 +56,6 @@ let createNewBaseOptions programName programTagLine programHelpText verbose =
         verbose = verbose
         interimProgress = {items=new System.Collections.Generic.Dictionary<string, System.Text.StringBuilder>()}
     }
-
-
 let createNewConfigEntry commandlineSymbol commandlineParameterName parameterHelpText initialValue =
     {
         commandLineParameterSymbol=commandlineSymbol
@@ -46,17 +71,16 @@ let defaultVerbosity  =
         parameterHelpText=[|"/V:[0-9]           -> Amount of trace info to report. 0=none, 5=normal, 9=max."|]           
         parameterValue=Verbosity.Minimum
     }
-
 let programHelp = [|"This is an example program for talking about option types."|]
 let defaultBaseOptions = createNewBaseOptions "optionExample" "Does some thing with some stuff" programHelp defaultVerbosity
 let defaultFullFileName = System.IO.Path.Combine([|System.AppDomain.CurrentDomain.BaseDirectory; "OptionEssayExampleFile.txt"|])
 let defaultInputFile = 
     createNewConfigEntry "I" "Input File (Optional)" 
-        [|"/I:<filename> -> full name of the file to use for input."|]
+        [|"-I:<filename> -> full name of the file to use for input."|]
         (defaultFullFileName, Some(System.IO.FileInfo(defaultFullFileName)))
 let defaultOutputFormat =
     createNewConfigEntry "F" "Output Format (Optional"
-        [|"/F:<TEXT|HTML|WEBPAGE> -> type of output desired"; "Defaults to TEXT"|]
+        [|"-F:<TEXT|HTML|WEBPAGE> -> type of output desired"; "Defaults to TEXT"|]
         OutputFormat.Text
 let loadConfigFromCommandLine (args:string []):OptionExampleProgramConfig =
     if args.Length>0 && (args.[0]="?"||args.[0]="/?"||args.[0]="-?"||args.[0]="--?"||args.[0]="help"||args.[0]="/help"||args.[0]="-help"||args.[0]="--help") then raise (UserNeedsHelp args.[0]) else

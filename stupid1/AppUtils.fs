@@ -3,23 +3,22 @@ open SystemTypes
 open SystemUtils
 open AppTypes
 
-/// Takes a name=value collection and sums by name
-let groupAndSumKV (optionLines:seq<System.Collections.Generic.KeyValuePair<string,int>>) =
-    optionLines
-    |> Seq.groupBy(fun x->x.Key) 
-    |> Seq.sortBy fst
-    |> Seq.map(fun x->
-        let sumOfGroupedData=snd x |> Seq.sumBy(fun x->x.Value)
-        (fst x, sumOfGroupedData)
-        )
-let groupAndSum (optionLines:seq<OptionExampleFileLineType>) =
-    optionLines 
-        |> Seq.map(fun x->x.ToKVPair) 
-        |> groupAndSumKV
-        |> Seq.map(fun x->
-            OptionExampleFileLineType.FromKVPairString 
-                (System.Collections.Generic.KeyValuePair<string,int>(fst x, snd x))
-            )
+let outputStuff (opts:OptionExampleProgramConfig) (outData:OptionExampleFileLinesType) =
+    let outputText:string =
+        match opts.outputFormat with
+            |Html->outData.ToHtml()
+            |WebPage->
+                let webserverReturnPage = 
+                    wrapFragmentIntoAnHtmlPageWebServerReturnString 
+                        "MyPage"
+                        "main.css"
+                        "main.js"
+                        (outData.ToHtml())
+                webserverReturnPage
+            |Text->(string outData)
+    System.Console.WriteLine outputText
+
+
 let doStuff (opts:OptionExampleProgramConfig) =
     let fileIsThere =System.IO.File.Exists(fst opts.inputFile.parameterValue)
     let keyValuesFromFile = 
@@ -31,12 +30,8 @@ let doStuff (opts:OptionExampleProgramConfig) =
             System.IO.File.ReadAllNameValueLines (fst opts.inputFile.parameterValue)
     // we want kv lines with alpha for key and number for value
     let optionLines = OptionExampleFileLinesType.FromStringKVCollection keyValuesFromFile
-    match opts.outputFormat with
-        |Html->printfn "Hey there"
-        |_->
-            let g1 = groupAndSum optionLines
-            g1 |> Seq.iter(fun x->printfn "%s" (string x))
-
+    let processedLines = optionLines.groupAndSum |> OptionExampleFileLinesType.FromSeq
+    outputStuff opts processedLines
 
 let newMain (argv:string[]) doStuffFunction = 
     try

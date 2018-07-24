@@ -1,6 +1,13 @@
 ﻿module SystemTypes
 
 let OSNewLine=System.Environment.NewLine
+let inline tryParseGeneric<
+    'a when ^a : (static member TryParse : string * ^a byref -> bool)
+    and  ^a : (new:unit->'a)
+    > text : 'a option =
+    let n =  ref (new 'a())
+    let ret = (^a : (static member TryParse: string * ^a byref -> bool) (text,&n.contents))
+    if ret then Some (n.Value) else None
 
 let lineContainsADelimiter (delimiter:char) (line:string) = line.Contains(string delimiter)
 let lineOnlyHasTwoPieces (delimiter:char) (line:string) = line.Split([|delimiter|]).Length=2

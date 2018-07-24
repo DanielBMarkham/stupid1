@@ -19,7 +19,7 @@ type OptionExampleFileLineType =
             if tryParseInt.IsNone then None
             else Some {Name=fst split.Value; Number=tryParseInt.Value}
     override self.ToString() =
-    self.Name + "=" + self.Number.ToString()
+        self.Name + "=" + self.Number.ToString()
     member self.ToHtml() =
         "<div class='NameNumberPairTypeItem'><span class='NameNumberPairTypeItemName'>"
         + self.Name + "</span>="
@@ -53,9 +53,13 @@ type OptionExampleFileLinesType =
                         |> Seq.filter(fun x->doesKVWorkForUs x)
                         |> Seq.map(fun x->OptionExampleFileLineType.FromNameAndNumber
                                             x.Key (snd (tryParsingValueIntoAnInteger x)))
+                        |> Seq.toArray
+                        |> OptionExampleFileLinesType.FromSeq
         optionLines
     static member FromStrings (strings:seq<string>) =
         strings |> Seq.map(fun x-> OptionExampleFileLineType.FromString x) |> Seq.choose id
+    override self.ToString() =
+        self.OptionExampleFileLines |> Array.map(fun x->string x) |> String.concat OSNewLine
     member self.ToHtml() =
         let makeItemIntoHtmlLIItem (item:OptionExampleFileLineType) =
             "<li class='OptionExampleFileLinesItem'>" + OSNewLine
@@ -63,12 +67,17 @@ type OptionExampleFileLinesType =
             + "</li>" + OSNewLine
         let makeItemsIntoHtmlItemList (items:OptionExampleFileLineType[]) = 
             items |> Array.map(fun x->
-                "<li class='NameNumberPairTypeListItem'>" + OSNewLine
-                + (makeItemIntoHtmlLIItem x) + OSNewLine +
-                "</li>" + OSNewLine
-                ) |> String.concat ""         
+                (makeItemIntoHtmlLIItem x) 
+                ) |> String.concat OSNewLine   
         "<div class='OptionExampleFileLines'><ul class='OptionExampleFileLinesList'>" + OSNewLine
         + (makeItemsIntoHtmlItemList self.OptionExampleFileLines)
-        + "</ul></div>" + OSNewLine
-
+            + "</ul></div>" + OSNewLine
+    member self.groupAndSum =
+        self.OptionExampleFileLines 
+            |> Seq.map(fun x->x.ToKVPair) 
+            |> groupAndSumKV
+            |> Seq.map(fun x->
+                OptionExampleFileLineType.FromKVPairString 
+                    (System.Collections.Generic.KeyValuePair<string,int>(fst x, snd x))
+                )
 

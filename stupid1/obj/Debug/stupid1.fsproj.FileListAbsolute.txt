@@ -8,8 +8,12 @@ C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\stupid1.
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\stupid1.exe
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\stupid1.pdb
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\FSharp.Core.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\mscorlib.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.framework.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Numerics.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.ValueTuple.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Xml.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\FSharp.Core.xml
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.framework.pdb
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.framework.xml
