@@ -1,0 +1,1 @@
+myInput=a%3D9%0D%0Ab%3D4%0D%0Ac%3D10%0D%0Aa%3D3&blub=dfg+asdf

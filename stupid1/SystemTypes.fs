@@ -9,8 +9,10 @@ let inline tryParseGeneric<
     let ret = (^a : (static member TryParse: string * ^a byref -> bool) (text,&n.contents))
     if ret then Some (n.Value) else None
 
-let lineContainsADelimiter (delimiter:char) (line:string) = line.Contains(string delimiter)
-let lineOnlyHasTwoPieces (delimiter:char) (line:string) = line.Split([|delimiter|]).Length=2
+let lineContainsADelimiter (delimiter:char) (line:string) = 
+    if line=null then false else line.Contains(string delimiter)
+let lineOnlyHasTwoPieces (delimiter:char) (line:string) =
+    if line=null then false else line.Split([|delimiter|]).Length=2
 let splitLineIfPossibleIntoTwoPieces (delimiter:char) (line:string)  =
     if lineContainsADelimiter delimiter line && lineOnlyHasTwoPieces delimiter line
         then
@@ -104,11 +106,32 @@ type OutputFormat = Text | Html | WebPage with
             |_->(false, OutputFormat.Text)
         static member Parse(stringToParse:string) =
         match stringToParse.ToUpper() with
-            |"TEXT"->OutputFormat.Text
-            |"HTML"->OutputFormat.Html
-            |"WEBPAGE"->OutputFormat.WebPage
+            |"TEXT"|"T"->OutputFormat.Text
+            |"HTML"|"H"->OutputFormat.Html
+            |"WEBPAGE"|"W"->OutputFormat.WebPage
             |_->OutputFormat.Text
             //raise(new System.ArgumentOutOfRangeException("OutputFormat","The string value provided for Output format doesn't exist in the enum"))
+type InputFormat = Stream | File | CGI with
+        static member ToList() =
+        [Stream;File;CGI]
+        override self.ToString() =
+            match self with
+            | Stream->"Stream"
+            | File->"File"
+            | CGI->"Cgi"
+        static member TryParse(stringToParse:string) =
+        match stringToParse.ToUpper() with
+            |"Stream"|"S"->true,InputFormat.Stream
+            |"File"|"F"->true,InputFormat.File
+            |"CGI"|"C"->true,InputFormat.CGI
+            |_->(false, InputFormat.File)
+        static member Parse(stringToParse:string) =
+        match stringToParse.ToUpper() with
+            |"Stream"|"S"->InputFormat.Stream
+            |"FILE"|"F"->InputFormat.File
+            |"CGI"|"C"->InputFormat.CGI
+            |_->InputFormat.File
+            //raise(new System.ArgumentOutOfRangeException("InputFormat","The string value provided for Output format doesn't exist in the enum"))
 
 /// Parameterized type to allow command-line argument processing without a lot of extra coder work
 /// Instantiate the type with the type of value you want. Make a default entry in case nothing is found
@@ -211,6 +234,12 @@ type ConfigEntry<'A> =
                         let tp=OutputFormat.TryParse parmValue.Value
                         if fst tp=true then snd tp else defaultConfig.parameterValue
             defaultConfig.swapInNewValue newVal
+        static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<InputFormat>), (args:string[])):ConfigEntry<InputFormat>  =
+            let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+            let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                        let tp=InputFormat.TryParse parmValue.Value
+                        if fst tp=true then snd tp else defaultConfig.parameterValue
+            defaultConfig.swapInNewValue newVal
 /// A type so that programs can report what they're doing as they do it
 // This was the programmer can decide what to do with it instead of the OS
 [<NoComparison>]
@@ -253,10 +282,12 @@ type OptionExampleProgramConfig =
     {
         configBase:ConfigBase
         inputFile:ConfigEntry<FileParm>
+        inputFormat:InputFormat
         outputFormat:OutputFormat
     }
     member this.printThis() =
         printfn "EasyAMConfig Parameters Provided"
         this.configBase.verbose.printVal
         this.inputFile.printVal
-        printfn "%s" (string this.outputFormat)
+        printfn "%s: %s" "InputFormat : %s" (string this.inputFormat)
+        printfn "%s: %s" "OutputFormat : %s" (string this.outputFormat)

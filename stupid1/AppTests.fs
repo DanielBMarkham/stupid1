@@ -22,12 +22,12 @@ let initialTestFile =
 [<Test>]
 let ``OptionExampleFileLines: Initial test file``() = 
     let ret=OptionExampleFileLinesType.FromStrings initialTestFile 
-    let ret=ret  |> Seq.toArray
+    let ret=ret.TEST
     Assert.AreEqual("a=9", ret.[0].ToString())
     Assert.AreEqual("a=9", ret.[6].ToString())
 [<Test>]
 let ``groupAndSum: Initial test file``() = 
-    let input=OptionExampleFileLinesType.FromStrings initialTestFile |> OptionExampleFileLinesType.FromSeq
+    let input=OptionExampleFileLinesType.FromStrings initialTestFile
     let ret=input.groupAndSum  |> Seq.toArray
     Assert.AreEqual(3, ret.Length)
     Assert.AreEqual("a=22", ret.[0].ToString())
@@ -35,7 +35,7 @@ let ``groupAndSum: Initial test file``() =
     Assert.AreEqual("c=21", ret.[2].ToString())
 [<Test>]
 let ``NameNumberPairType: ToHtml``() = 
-    let input=OptionExampleFileLinesType.FromStrings initialTestFile |> OptionExampleFileLinesType.FromSeq
+    let input=OptionExampleFileLinesType.FromStrings initialTestFile
     let ret=input.groupAndSum  |> Seq.toArray
     let retHtml = ret.[0].ToHtml()
     let expectedString=
@@ -45,7 +45,7 @@ let ``NameNumberPairType: ToHtml``() =
     Assert.AreEqual(expectedString, retHtml)
 [<Test>]
 let ``OptionExampleFileLines: ToHtml``() = 
-    let input=OptionExampleFileLinesType.FromStrings initialTestFile |> OptionExampleFileLinesType.FromSeq
+    let input=OptionExampleFileLinesType.FromStrings initialTestFile
     let ret=input.groupAndSum  |> Seq.toArray
     let retHtml = input.ToHtml()
     let expectedString=

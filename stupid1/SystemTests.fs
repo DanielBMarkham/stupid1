@@ -39,3 +39,12 @@ let ``convertLinesIfPossibleToKVPair: Ignore bad lines``() =
     let ret= convertLinesIfPossibleToKVPair initialTestFile
     Assert.AreEqual(7, (ret |> Seq.length))
         
+[<Test>]
+let ``Parse Sample CGI Input``()=
+    let sampleStream=["myInput=a%3D9%0D%0Ab%3D4%0D%0Ac%3D10%0D%0Aa%3D3&blub=dfg+asdf"]
+    let procInput=processCGIStream sampleStream |>Seq.toArray
+    Assert.AreEqual(2, (procInput |> Seq.length))
+    Assert.AreEqual("myInput", procInput.[0].Key)
+    Assert.AreEqual("a=9\r\nb=4\r\nc=10\r\na=3", procInput.[0].Value)
+    Assert.AreEqual("blub", procInput.[1].Key)
+    Assert.AreEqual("dfg asdf", procInput.[1].Value)

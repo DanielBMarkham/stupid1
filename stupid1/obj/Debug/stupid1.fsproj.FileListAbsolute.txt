@@ -11,6 +11,8 @@ C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\FSharp.C
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\mscorlib.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.framework.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Net.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Net.Http.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Numerics.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.ValueTuple.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Xml.dll
@@ -19,3 +21,5 @@ C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.fr
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.framework.xml
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\obj\Debug\stupid1.exe
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\obj\Debug\stupid1.pdb
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\StandAloneHttpUtility.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\StandAloneHttpUtility.pdb

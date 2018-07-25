@@ -7,8 +7,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "stupid1", "stupid1\stupid1.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{27A7A3FF-6C8E-4697-B5B1-7C7A6DCB62D9}"
 	ProjectSection(SolutionItems) = preProject
+		Pages\NameNumberHarness.html = Pages\NameNumberHarness.html
 		stupid1\bin\Debug\OptionEssayExampleFile.txt = stupid1\bin\Debug\OptionEssayExampleFile.txt
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{20916D73-E981-42BE-8E9D-0EC29DEA2918}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,5 +26,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{20916D73-E981-42BE-8E9D-0EC29DEA2918} = {27A7A3FF-6C8E-4697-B5B1-7C7A6DCB62D9}
 	EndGlobalSection
 EndGlobal

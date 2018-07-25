@@ -2,6 +2,13 @@
 open SystemTypes
 open System
 
+/// found on web
+let rec readStdIn lines= 
+    match System.Console.ReadLine() with
+    | null -> List.rev lines
+    | "" -> readStdIn lines
+    | s -> readStdIn (s::lines)
+
 /// Are we running on linux?
 let isLinuxFileSystem =
     let os = System.Environment.OSVersion
@@ -29,16 +36,24 @@ let wrapFragmentIntoAnHtmlPageWebServerReturnString
     (cssFile:string) 
     (javascriptFile:string) 
     (contents:string) =
+    let cssEntry =
+        if cssFile.Length>0
+            then OSNewLine + "<link rel='stylesheet' type='text/css' media='all' href='"
+                + cssFile + "' />" 
+            else ""
+    let jsEntry =
+        if javascriptFile.Length>0
+            then OSNewLine + "	<script src='"
+                + javascriptFile + "'></script>"
+            else ""
     let ret  =  "Content-Type: text/html\r\n\r\n"
                 + "<!DOCTYPE html>" 
                 + OSNewLine + "<html>" 
                 + OSNewLine + "<head>"
                 + OSNewLine + "<title>"
                 + title + "</title>"
-                + OSNewLine + "<link rel='stylesheet' type='text/css' media='all' href='"
-                + cssFile + "' />" 
-                + OSNewLine + "	<script src='"
-                + javascriptFile + "'></script>"
+                + cssEntry
+                + jsEntry
                 + OSNewLine + "</head>\n"
                 + OSNewLine + "<body>"
                 + OSNewLine + contents
@@ -79,17 +94,27 @@ let defaultInputFile =
         [|"-I:<filename> -> full name of the file to use for input."|]
         (defaultFullFileName, Some(System.IO.FileInfo(defaultFullFileName)))
 let defaultOutputFormat =
-    createNewConfigEntry "F" "Output Format (Optional"
-        [|"-F:<TEXT|HTML|WEBPAGE> -> type of output desired"; "Defaults to TEXT"|]
+    createNewConfigEntry "OF" "Output Format (Optional"
+        [|"-OF:<TEXT|HTML|WEBPAGE> -> type of output desired"; "Defaults to TEXT"|]
         OutputFormat.Text
+let defaultInputFormat =
+    createNewConfigEntry "IF" "Input Format (Optional"
+        [|"-IF:<STREAM|FILE|CGI> -> type of stdin input being sent"; "Defaults to STREAM"|]
+        InputFormat.Stream
 let loadConfigFromCommandLine (args:string []):OptionExampleProgramConfig =
     if args.Length>0 && (args.[0]="?"||args.[0]="/?"||args.[0]="-?"||args.[0]="--?"||args.[0]="help"||args.[0]="/help"||args.[0]="-help"||args.[0]="--help") then raise (UserNeedsHelp args.[0]) else
+    let inputFileParmOnLine = args |> Array.exists(fun x->x.IndexOf("-I:")<>(-1))
     let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
     let newConfigBase = {defaultBaseOptions with verbose=newVerbosity}
     let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
     let newInputFile = ConfigEntry<_>.populateValueFromCommandLine(defaultInputFile, args)
+    let newInputFormat = ConfigEntry<_>.populateValueFromCommandLine(defaultInputFormat, args)
     let newOutputFormat = ConfigEntry<_>.populateValueFromCommandLine(defaultOutputFormat, args)
-    {configBase = newConfigBase; inputFile=newInputFile; outputFormat=newOutputFormat.parameterValue}
+    if inputFileParmOnLine
+        then
+            {configBase = newConfigBase; inputFile=newInputFile; inputFormat=File; outputFormat=newOutputFormat.parameterValue}
+        else
+            {configBase = newConfigBase; inputFile=newInputFile; inputFormat=newInputFormat.parameterValue; outputFormat=newOutputFormat.parameterValue}
 
 let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
 let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome
@@ -151,4 +176,44 @@ let commandLinePrintWhileExit (baseOptions:ConfigBase) =
         |_ ->
             ()
 
+let processCGIStream incomingStream =
+    let findVariables = incomingStream |> List.map(fun x->
+        let goodLine = (lineContainsADelimiter '=' x) &&  (x.Split([|'='|]).Length>1)
+        let multipleVariablesOnLine = lineContainsADelimiter '&' x
+        if goodLine
+            then
+                let lineSplitByVariable = 
+                    if multipleVariablesOnLine
+                        then x.Split([|'&'|])
+                        else [|x|]
+                let variableValueMatch = 
+                    lineSplitByVariable |> Array.map(fun x->
+                        let lineSplitByEquals=x.Split([|'='|])
+                        if lineSplitByEquals.Length<2
+                            then None
+                            else
+                            let newKey=lineSplitByEquals.[0]
+                            let codedVal=lineSplitByEquals.[1]
+                            let newVal=
+                                try
+                                    let decodedVal = HttpUtility.UrlDecode(codedVal)
+                                    decodedVal
+                                with
+                                    | :? System.Exception as ex ->
+                                        //System.Console.WriteLine ("DOH " + codedVal)
+                                        //System.Console.WriteLine ("EX " + ex.Message)
+                                        //System.Console.WriteLine()
+                                        //if ex.InnerException<>null
+                                        //    then System.Console.WriteLine ("EXInner " + ex.Message) else ()
+                                        "BAD VARIABLE VALUE"
+                            Some (System.Collections.Generic.KeyValuePair<string,string>(newKey,newVal))
+                        )
+                    |>Array.choose id
+                Some variableValueMatch
+            else None
+        )
+    findVariables |> List.choose id |> Seq.concat
 
+let processCGISteamIntoVariables() =
+    let incomingStream = readStdIn []
+    processCGIStream incomingStream

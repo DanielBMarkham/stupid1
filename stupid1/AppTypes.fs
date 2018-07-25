@@ -57,7 +57,7 @@ type OptionExampleFileLinesType =
                         |> OptionExampleFileLinesType.FromSeq
         optionLines
     static member FromStrings (strings:seq<string>) =
-        strings |> Seq.map(fun x-> OptionExampleFileLineType.FromString x) |> Seq.choose id
+        strings |> Seq.map(fun x-> OptionExampleFileLineType.FromString x) |> Seq.choose id |> Seq.toArray |> OptionExampleFileLinesType.FromSeq
     override self.ToString() =
         self.OptionExampleFileLines |> Array.map(fun x->string x) |> String.concat OSNewLine
     member self.ToHtml() =
@@ -80,4 +80,5 @@ type OptionExampleFileLinesType =
                 OptionExampleFileLineType.FromKVPairString 
                     (System.Collections.Generic.KeyValuePair<string,int>(fst x, snd x))
                 )
+    member self.TEST = self.OptionExampleFileLines
 

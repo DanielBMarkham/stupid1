@@ -50,9 +50,29 @@
  Are we running on linux?
 </summary>
 </member>
+<member name="M:SystemUtils.readStdIn(Microsoft.FSharp.Collections.FSharpList{System.String})">
+<summary>
+ found on web
+</summary>
+</member>
 <member name="M:SystemTests.getFakeFileName">
 <summary>
  Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing
+</summary>
+</member>
+<member name="M:AppUtils.doStuff(SystemTypes.OptionExampleProgramConfig)">
+<summary>
+ Mother of all functions where things start and then get factored out
+</summary>
+</member>
+<member name="M:AppUtils.outputStuff(SystemTypes.OptionExampleProgramConfig,AppTypes.OptionExampleFileLinesType)">
+<summary>
+ Outside of the onion going out
+</summary>
+</member>
+<member name="M:AppUtils.inputStuff(SystemTypes.OptionExampleProgramConfig)">
+<summary>
+ Outside of the onion coming in
 </summary>
 </member>
 </members>

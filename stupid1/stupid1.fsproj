@@ -87,10 +87,19 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="StandAloneHttpUtility">
+      <HintPath>..\..\..\..\..\Documents\StandAloneHttpUtility\StandAloneHttpUtility\bin\Debug\StandAloneHttpUtility.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics">
@@ -100,6 +109,7 @@
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml">
       <Private>True</Private>
     </Reference>
