@@ -3,64 +3,63 @@ open SystemTypes
 open SystemUtils
 open AppTypes
 
-/// Outside of the onion coming in
-let inputStuff (opts:OptionExampleProgramConfig):OptionExampleFileLinesType = 
-    let fileIsThere =System.IO.File.Exists(fst opts.inputFile.parameterValue)
-    let inputStrings:string seq =
-        match opts.inputFormat with
-            |Stream->
-                readStdIn [] |> List.toSeq
-            |File-> 
-                System.IO.File.ReadAllLines(fst opts.inputFile.parameterValue)
-                    |> Array.toSeq
-            |CGI->
-                // This is specific to the test html harness form and should go away
-                let cgiVariables=processCGISteamIntoVariables() 
-                                |> Seq.toArray
-                if cgiVariables |> Array.exists(fun x->x.Key="myInput")
-                    then
-                        let var=(cgiVariables 
-                            |> Array.find(fun x->x.Key="myInput")).Value
-                        var.Split([|OSNewLine|], System.StringSplitOptions.None) 
-                            |> Array.toSeq
-                    else Seq.empty
-    OptionExampleFileLinesType.FromStrings inputStrings
 
+
+/// Outside of the onion coming in
+let inputStuff (opts:OptionExampleProgramConfig)= 
+    let stringsToProcess= readStdIn []
+    let incomingData = 
+        match opts.inputFormat with
+            |JSON->OptionExampleFileLinesType.FromJsonStrings stringsToProcess
+            |Text->OptionExampleFileLinesType.FromStrings stringsToProcess
+            |CGI->
+                let cgiVariables=processCGIStream stringsToProcess
+                if cgiVariables |> Seq.exists(fun x->x.Key="myInput")
+                    then
+                        let varListFromCgiForm=
+                            let cgiVarList = cgiVariables |> Seq.map(fun x->x.Key, x.Value)
+                            let var=snd (cgiVarList |> Seq.find(fun x->fst x="myInput"))
+                            var.Split([|OSNewLine|], System.StringSplitOptions.None) 
+                        OptionExampleFileLinesType.FromStrings varListFromCgiForm
+                    else OptionExampleFileLinesType.FromStrings []
+    (opts,incomingData)
 /// Outside of the onion going out
-let outputStuff (opts:OptionExampleProgramConfig) (outData:OptionExampleFileLinesType) =
+let outputStuff ((opts:OptionExampleProgramConfig),(outgoingData:OptionExampleFileLinesType)) =
     let outputText:string =
         match opts.outputFormat with
-            |Html->outData.ToHtml()
+            |OutputFormat.JSON->outgoingData.ToJson()
+            |Html->outgoingData.ToHtml()
             |WebPage->
                 let webserverReturnPage = 
                     wrapFragmentIntoAnHtmlPageWebServerReturnString 
                         "MyPage"
                         "main.css"
                         "main.js"
-                        (outData.ToHtml())
+                        (outgoingData.ToHtml())
                 webserverReturnPage
-            |Text->(string outData)
+            |OutputFormat.Text->(string outgoingData)
     System.Console.WriteLine outputText
+    0
 
 /// Mother of all functions where things start and then get factored out
-let doStuff (opts:OptionExampleProgramConfig) =
-    let incomingData = inputStuff opts 
-    let processedLines = incomingData.groupAndSum |> OptionExampleFileLinesType.FromSeq
-    outputStuff opts processedLines
+let doStuff ((opts:OptionExampleProgramConfig),(inData:OptionExampleFileLinesType)) =
+    let processedLines = inData.groupAndSum |> OptionExampleFileLinesType.FromSeq
+    (opts,processedLines)
 
+
+#nowarn "0067"
 let newMain (argv:string[]) doStuffFunction = 
     try
-        let (opts:OptionExampleProgramConfig) = loadConfigFromCommandLine argv                
+        let opts = loadConfigFromCommandLine argv
         commandLinePrintWhileEnter opts.configBase (opts.printThis)
-        doStuffFunction opts
-        0
+        opts |> inputStuff |> doStuff |> outputStuff 
     with
         | :? UserNeedsHelp as hex ->
             printfn "%s: %s" defaultBaseOptions.programName hex.Data0
             printfn "========================"
             printfn "Command Line Options:"
             // Manually list program config entries here 
-            defaultInputFile.printHelp
+            //defaultInputFile.printHelp
             defaultOutputFormat.printHelp
             defaultInputFormat.printHelp
             0

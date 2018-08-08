@@ -1,10 +1,12 @@
 ﻿module SystemTypes
 
+open Newtonsoft.Json
+
 let OSNewLine=System.Environment.NewLine
 let inline tryParseGeneric<
-    'a when ^a : (static member TryParse : string * ^a byref -> bool)
-    and  ^a : (new:unit->'a)
-    > text : 'a option =
+                            'a when ^a : (static member TryParse : string * ^a byref -> bool)
+                            and  ^a : (new:unit->'a)
+                            > text : 'a option =
     let n =  ref (new 'a())
     let ret = (^a : (static member TryParse: string * ^a byref -> bool) (text,&n.contents))
     if ret then Some (n.Value) else None
@@ -30,12 +32,10 @@ let convertLinesIfPossibleToKVPair (stringSequence:string seq) =
             )
 type System.IO.File with    
     static member ReadAllNameValueLines s =
-    let textLines = 
-        try
-            System.IO.File.ReadAllLines s |> Array.toSeq
-        with
-            | :? System.Exception as ex ->Seq.empty
-    convertLinesIfPossibleToKVPair textLines
+        let textLines = 
+            try System.IO.File.ReadAllLines s |> Array.toSeq
+            with |_ ->Seq.empty
+        convertLinesIfPossibleToKVPair textLines
 
 /// Command-line parameters for this particular (OptionExample) program
 
@@ -90,48 +90,51 @@ type SortOrder = Ascending | Descending
                             |"d"|"desc"|"descending"|"D"|"DESC"|"Descending"|"Desc"|"DESCENDING"->SortOrder.Descending
                             |_->raise(new System.ArgumentOutOfRangeException("Sort Order","The string value provided for Sort Order is not in the Sort Order enum"))
 
-type OutputFormat = Text | Html | WebPage with
+type OutputFormat = Text | Html | WebPage |JSON with
         static member ToList() =
-        [Text;Html;WebPage]
+            [Text;Html;WebPage;JSON]
         override self.ToString() =
             match self with
             | Text->"Text"
             | Html->"Html"
             | WebPage->"WebPage"
+            | JSON->"Json"
         static member TryParse(stringToParse:string) =
-        match stringToParse.ToUpper() with
-            |"TEXT"|"T"->true,OutputFormat.Text
-            |"HTML"|"H"->true,OutputFormat.Html
-            |"WEBPAGE"|"W"->true,OutputFormat.WebPage
-            |_->(false, OutputFormat.Text)
+            match stringToParse.ToUpper() with
+                |"TEXT"|"T"->true,OutputFormat.Text
+                |"HTML"|"H"->true,OutputFormat.Html
+                |"WEBPAGE"|"W"->true,OutputFormat.WebPage
+                |"JSON"|"J"->true,OutputFormat.JSON
+                |_->(false, OutputFormat.Text)
         static member Parse(stringToParse:string) =
-        match stringToParse.ToUpper() with
-            |"TEXT"|"T"->OutputFormat.Text
-            |"HTML"|"H"->OutputFormat.Html
-            |"WEBPAGE"|"W"->OutputFormat.WebPage
-            |_->OutputFormat.Text
-            //raise(new System.ArgumentOutOfRangeException("OutputFormat","The string value provided for Output format doesn't exist in the enum"))
-type InputFormat = Stream | File | CGI with
+            match stringToParse.ToUpper() with
+                |"TEXT"|"T"->OutputFormat.Text
+                |"HTML"|"H"->OutputFormat.Html
+                |"WEBPAGE"|"W"->OutputFormat.WebPage
+                |"JSON"|"J"->OutputFormat.JSON
+                |_->OutputFormat.Text
+                //raise(new System.ArgumentOutOfRangeException("OutputFormat","The string value provided for Output format doesn't exist in the enum"))
+type InputFormat = CGI | JSON | Text with
         static member ToList() =
-        [Stream;File;CGI]
+            [CGI;JSON;Text]
         override self.ToString() =
             match self with
-            | Stream->"Stream"
-            | File->"File"
             | CGI->"Cgi"
+            | JSON->"Json"
+            | Text->"Text"
         static member TryParse(stringToParse:string) =
-        match stringToParse.ToUpper() with
-            |"Stream"|"S"->true,InputFormat.Stream
-            |"File"|"F"->true,InputFormat.File
-            |"CGI"|"C"->true,InputFormat.CGI
-            |_->(false, InputFormat.File)
+            match stringToParse.ToUpper() with
+                |"CGI"|"C"->true,InputFormat.CGI
+                |"JSON"|"J"->true,InputFormat.JSON
+                |"TEXT"|"T"->true,InputFormat.Text
+                |_->(false, InputFormat.Text)
         static member Parse(stringToParse:string) =
-        match stringToParse.ToUpper() with
-            |"Stream"|"S"->InputFormat.Stream
-            |"FILE"|"F"->InputFormat.File
-            |"CGI"|"C"->InputFormat.CGI
-            |_->InputFormat.File
-            //raise(new System.ArgumentOutOfRangeException("InputFormat","The string value provided for Output format doesn't exist in the enum"))
+            match stringToParse.ToUpper() with
+                |"TEXT"|"T"->InputFormat.Text
+                |"CGI"|"C"->InputFormat.CGI
+                |"JSON"|"J"->InputFormat.JSON
+                |_->InputFormat.Text
+                //raise(new System.ArgumentOutOfRangeException("InputFormat","The string value provided for Output format doesn't exist in the enum"))
 
 /// Parameterized type to allow command-line argument processing without a lot of extra coder work
 /// Instantiate the type with the type of value you want. Make a default entry in case nothing is found
@@ -281,13 +284,13 @@ type ConfigBase =
 type OptionExampleProgramConfig =
     {
         configBase:ConfigBase
-        inputFile:ConfigEntry<FileParm>
+        //inputFile:ConfigEntry<FileParm>
         inputFormat:InputFormat
         outputFormat:OutputFormat
     }
     member this.printThis() =
         printfn "EasyAMConfig Parameters Provided"
         this.configBase.verbose.printVal
-        this.inputFile.printVal
+        //this.inputFile.printVal
         printfn "%s: %s" "InputFormat : %s" (string this.inputFormat)
         printfn "%s: %s" "OutputFormat : %s" (string this.outputFormat)

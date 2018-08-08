@@ -1,0 +1,42 @@
+{
+  "groupAndSum": [
+    {
+      "ToKVPair": {
+        "Key": "a",
+        "Value": 12
+      }
+    },
+    {
+      "ToKVPair": {
+        "Key": "b",
+        "Value": 4
+      }
+    },
+    {
+      "ToKVPair": {
+        "Key": "c",
+        "Value": 10
+      }
+    }
+  ],
+  "TEST": [
+    {
+      "ToKVPair": {
+        "Key": "a",
+        "Value": 12
+      }
+    },
+    {
+      "ToKVPair": {
+        "Key": "b",
+        "Value": 4
+      }
+    },
+    {
+      "ToKVPair": {
+        "Key": "c",
+        "Value": 10
+      }
+    }
+  ]
+}

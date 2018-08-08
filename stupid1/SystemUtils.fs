@@ -88,33 +88,28 @@ let defaultVerbosity  =
     }
 let programHelp = [|"This is an example program for talking about option types."|]
 let defaultBaseOptions = createNewBaseOptions "optionExample" "Does some thing with some stuff" programHelp defaultVerbosity
-let defaultFullFileName = System.IO.Path.Combine([|System.AppDomain.CurrentDomain.BaseDirectory; "OptionEssayExampleFile.txt"|])
-let defaultInputFile = 
-    createNewConfigEntry "I" "Input File (Optional)" 
-        [|"-I:<filename> -> full name of the file to use for input."|]
-        (defaultFullFileName, Some(System.IO.FileInfo(defaultFullFileName)))
+//let defaultFullFileName = System.IO.Path.Combine([|System.AppDomain.CurrentDomain.BaseDirectory; "OptionEssayExampleFile.txt"|])
+//let defaultInputFile = 
+//    createNewConfigEntry "I" "Input File (Optional)" 
+//        [|"-I:<filename> -> full name of the file to use for input."|]
+//        (defaultFullFileName, Some(System.IO.FileInfo(defaultFullFileName)))
 let defaultOutputFormat =
     createNewConfigEntry "OF" "Output Format (Optional"
         [|"-OF:<TEXT|HTML|WEBPAGE> -> type of output desired"; "Defaults to TEXT"|]
         OutputFormat.Text
 let defaultInputFormat =
     createNewConfigEntry "IF" "Input Format (Optional"
-        [|"-IF:<STREAM|FILE|CGI> -> type of stdin input being sent"; "Defaults to STREAM"|]
-        InputFormat.Stream
+        [|"-IF:<TEXT|FILE|CGI> -> type of stdin input being sent"; "Defaults to TEXT"|]
+        InputFormat.Text
 let loadConfigFromCommandLine (args:string []):OptionExampleProgramConfig =
     if args.Length>0 && (args.[0]="?"||args.[0]="/?"||args.[0]="-?"||args.[0]="--?"||args.[0]="help"||args.[0]="/help"||args.[0]="-help"||args.[0]="--help") then raise (UserNeedsHelp args.[0]) else
-    let inputFileParmOnLine = args |> Array.exists(fun x->x.IndexOf("-I:")<>(-1))
     let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
     let newConfigBase = {defaultBaseOptions with verbose=newVerbosity}
     let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
-    let newInputFile = ConfigEntry<_>.populateValueFromCommandLine(defaultInputFile, args)
+    //let newInputFile = ConfigEntry<_>.populateValueFromCommandLine(defaultInputFile, args)
     let newInputFormat = ConfigEntry<_>.populateValueFromCommandLine(defaultInputFormat, args)
     let newOutputFormat = ConfigEntry<_>.populateValueFromCommandLine(defaultOutputFormat, args)
-    if inputFileParmOnLine
-        then
-            {configBase = newConfigBase; inputFile=newInputFile; inputFormat=File; outputFormat=newOutputFormat.parameterValue}
-        else
-            {configBase = newConfigBase; inputFile=newInputFile; inputFormat=newInputFormat.parameterValue; outputFormat=newOutputFormat.parameterValue}
+    {configBase = newConfigBase; inputFormat=newInputFormat.parameterValue; outputFormat=newOutputFormat.parameterValue}
 
 let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
 let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome
@@ -176,6 +171,7 @@ let commandLinePrintWhileExit (baseOptions:ConfigBase) =
         |_ ->
             ()
 
+#nowarn "0067"
 let processCGIStream incomingStream =
     let findVariables = incomingStream |> List.map(fun x->
         let goodLine = (lineContainsADelimiter '=' x) &&  (x.Split([|'='|]).Length>1)

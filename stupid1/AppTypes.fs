@@ -1,6 +1,7 @@
 ﻿module AppTypes
 open SystemTypes
 open SystemUtils
+open Newtonsoft.Json.Converters
 
 type OptionExampleFileLineType = 
     private { Name:string;Number:int} with
@@ -18,6 +19,11 @@ type OptionExampleFileLineType =
             let tryParseInt = tryParseGeneric<int> (snd split.Value)
             if tryParseInt.IsNone then None
             else Some {Name=fst split.Value; Number=tryParseInt.Value}
+    static member FromJson (s:string) = 
+        try Some(Newtonsoft.Json.JsonConvert.DeserializeObject<OptionExampleFileLineType>(s))
+        with |_ ->None
+    member self.ToJson()=
+        Newtonsoft.Json.JsonConvert.SerializeObject(self,Newtonsoft.Json.Formatting.Indented)    
     override self.ToString() =
         self.Name + "=" + self.Number.ToString()
     member self.ToHtml() =
@@ -58,6 +64,14 @@ type OptionExampleFileLinesType =
         optionLines
     static member FromStrings (strings:seq<string>) =
         strings |> Seq.map(fun x-> OptionExampleFileLineType.FromString x) |> Seq.choose id |> Seq.toArray |> OptionExampleFileLinesType.FromSeq
+    static member FromJsonString (s:string) =
+        try Newtonsoft.Json.JsonConvert.DeserializeObject<OptionExampleFileLinesType>(s)
+        with |_ ->{OptionExampleFileLines=[||]}
+    static member FromJsonStrings (strings:seq<string>) =
+        OptionExampleFileLinesType.FromJsonString(
+            strings |> String.concat "")
+    member self.ToJson()=
+        Newtonsoft.Json.JsonConvert.SerializeObject(self,Newtonsoft.Json.Formatting.Indented)    
     override self.ToString() =
         self.OptionExampleFileLines |> Array.map(fun x->string x) |> String.concat OSNewLine
     member self.ToHtml() =
@@ -82,3 +96,5 @@ type OptionExampleFileLinesType =
                 )
     member self.TEST = self.OptionExampleFileLines
 
+//type OnionProcessing = OptionExampleProgramConfig->OptionExampleFileLinesType->int 
+//type OnionOutgoing = OptionExampleProgramConfig->OptionExampleFileLinesType->int 

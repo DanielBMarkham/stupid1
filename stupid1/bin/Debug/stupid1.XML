@@ -60,7 +60,7 @@
  Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing
 </summary>
 </member>
-<member name="M:AppUtils.doStuff(SystemTypes.OptionExampleProgramConfig)">
+<member name="M:AppUtils.doStuff(SystemTypes.OptionExampleProgramConfig,AppTypes.OptionExampleFileLinesType)">
 <summary>
  Mother of all functions where things start and then get factored out
 </summary>
