@@ -1,0 +1,38 @@
+{"OptionExampleFileLines":[
+  {
+    "Name": "a",
+    "Number": "5"
+  },
+  {
+    "Name": "b",
+    "Number": "3.14159"
+  },
+  {
+    "Name": "c",
+    "Number": "the cow goes moo"
+  },
+  {
+    "Name": "a",
+    "Number": "1"
+  },
+  {
+    "Name": "das",
+    "Number": "54"
+  },
+  {
+    "Name": "b",
+    "Number": "0"
+  },
+  {
+    "Name": "c",
+    "Number": ".4"
+  },
+  {
+    "Name": "a",
+    "Number": "7"
+  },
+  {
+    "Name": "f",
+    "Number": "dog"
+  }
+]}

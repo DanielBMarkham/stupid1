@@ -10,7 +10,7 @@ let inputStuff (opts:OptionExampleProgramConfig)=
     let stringsToProcess= readStdIn []
     let incomingData = 
         match opts.inputFormat with
-            |JSON->OptionExampleFileLinesType.FromJsonStrings stringsToProcess
+            |JSON->OptionExampleFileLinesType.FromJsonString (stringsToProcess |> String.concat "")
             |Text->OptionExampleFileLinesType.FromStrings stringsToProcess
             |CGI->
                 let cgiVariables=processCGIStream stringsToProcess
@@ -39,11 +39,16 @@ let outputStuff ((opts:OptionExampleProgramConfig),(outgoingData:OptionExampleFi
                 webserverReturnPage
             |OutputFormat.Text->(string outgoingData)
     System.Console.WriteLine outputText
+    System.Console.Out.Flush()
+    System.Console.Out.Close()
+    System.Console.Error.Flush()
+    System.Console.Error.Close()
+    System.Console.In.Close()
     0
 
 /// Mother of all functions where things start and then get factored out
 let doStuff ((opts:OptionExampleProgramConfig),(inData:OptionExampleFileLinesType)) =
-    let processedLines = inData.groupAndSum |> OptionExampleFileLinesType.FromSeq
+    let processedLines = inData.groupAndSum() |> OptionExampleFileLinesType.FromSeq
     (opts,processedLines)
 
 

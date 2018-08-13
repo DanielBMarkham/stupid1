@@ -1,41 +1,21 @@
 {
-  "groupAndSum": [
+  "OptionExampleFileLines": [
     {
-      "ToKVPair": {
-        "Key": "a",
-        "Value": 12
+      "NameIntPair": {
+        "Name": "a",
+        "Number": 12
       }
     },
     {
-      "ToKVPair": {
-        "Key": "b",
-        "Value": 4
+      "NameIntPair": {
+        "Name": "b",
+        "Number": 4
       }
     },
     {
-      "ToKVPair": {
-        "Key": "c",
-        "Value": 10
-      }
-    }
-  ],
-  "TEST": [
-    {
-      "ToKVPair": {
-        "Key": "a",
-        "Value": 12
-      }
-    },
-    {
-      "ToKVPair": {
-        "Key": "b",
-        "Value": 4
-      }
-    },
-    {
-      "ToKVPair": {
-        "Key": "c",
-        "Value": 10
+      "NameIntPair": {
+        "Name": "c",
+        "Number": 10
       }
     }
   ]

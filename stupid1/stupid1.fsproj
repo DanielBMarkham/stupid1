@@ -32,7 +32,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <StartArguments>type CGISample1.testin | ./stupid1.exe -OF:Text</StartArguments>
+    <StartArguments>cat JsonSample1.testin | ./stupid1.exe -IF:J -OF:J</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
