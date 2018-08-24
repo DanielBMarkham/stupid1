@@ -98,13 +98,6 @@ type OptionExampleFileLinesType =
             if probablyUsesEscapedPropertyNames(s) 
                 then s.Replace("\\\\\\\"", "")
                 else s
-        //let testJsonDat:OptionExampleFileLinesJson = {OptionExampleFileLines=
-        //    [|
-        //        {NameIntPairJson={Name="a";Number="2"}}
-        //        ;{NameIntPair={Name="b";Number="5"}}
-        //        ;{NameIntPair={Name="a";Number="5"}}
-        //        ;{NameIntPair={Name="b";Number="9"}}
-        //    |]}
         let JsonShim=Newtonsoft.Json.JsonConvert.DeserializeObject<OptionExampleFileLinesJson>(webFixedString)
         let JsonStrings = JsonShim.OptionExampleFileLines |> Array.map(fun x->x.ToTextLine())
         OptionExampleFileLinesType.FromStrings(JsonStrings)        
