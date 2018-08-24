@@ -17,6 +17,8 @@ cat CGISample1.testin | ./stupid1.exe -IF:C -OF:J > CGISample1ToJson.testout
 cat JsonSample1.testin | ./stupid1.exe -IF:J -OF:T > JsonSample1ToText.testout
 cat JsonSample1.testin | ./stupid1.exe -IF:J -OF:J > JsonSample1ToJson.testout
 
+cat CGISample1.testin | ./stupid1.exe -IF:C -OF:T | ./stupid1.exe -IF:T -OF:J
+
 cat CGISample1.testin | ./stupid1.exe -IF:C -OF:T > pipetemp1
 cat pipetemp1 | ./stupid1.exe -IF:T -OF:J > CGI2Text2Json1Sample.testout
 rm -f pipetemp1

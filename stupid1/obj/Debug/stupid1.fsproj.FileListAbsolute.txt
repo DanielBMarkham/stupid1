@@ -10,7 +10,6 @@ C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\stupid1.
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\FSharp.Core.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\mscorlib.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\nunit.framework.dll
-C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Net.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Net.Http.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Numerics.dll
@@ -123,3 +122,7 @@ C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.X
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Xml.XPath.XDocument.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\Bash.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\obj\Debug\stupid1.exe.config
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.Web.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.ComponentModel.Composition.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.ComponentModel.Composition.Registration.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\stupid1\stupid1\bin\Debug\System.ComponentModel.DataAnnotations.dll

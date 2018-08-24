@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		stupid1\bin\Debug\filecomp.sh = stupid1\bin\Debug\filecomp.sh
 		Pages\NameNumberHarness.html = Pages\NameNumberHarness.html
 		stupid1\bin\Debug\OptionEssayExampleFile.txt = stupid1\bin\Debug\OptionEssayExampleFile.txt
+		stupid-spa.html = stupid-spa.html
 		stupid1\bin\Debug\stupid1Test.sh = stupid1\bin\Debug\stupid1Test.sh
 		stupid1\bin\Debug\stupid1TestReset.sh = stupid1\bin\Debug\stupid1TestReset.sh
 	EndProjectSection

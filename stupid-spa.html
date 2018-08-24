@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Stupid App in a SPA setting</title>
+    <meta name="description" content="A little page with Json, Vue, and Bootstrap">
+    <meta name="author" content="Daniel B. Markham">
+    <link rel="icon" type="image/gif" href="images/onair.gif">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/sticky-footer-navbar.css">
+    <link rel="stylesheet" href="css/fa-svg-with-js.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            background-image: url('images/woof.png');
+            background-size: cover;
+        }
+        table {
+            border: solid 1px black;
+            margin:auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The Stupid App, Now With Json!</h1>
+    </header>
+    <!-- Begin page content -->
+    <main class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 text-center">
+                <h3>Results</h3>
+                <table id="results">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Value</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 text-center">
+                <form id="addStuff">
+                    <input type="text" />
+                    <br />
+                    <input type="button" title="Enter" />
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 text-center">
+                <h3>Data</h3>
+                <table id="data">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Value</td>
+                            <td>Del</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 text-center">
+                <p>
+                    Enter your name and numbers here<br />
+                    Use the format NAME=VAL
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 text-center">
+                <form id="myForm" action="http://info-ops.org/cgi-bin/st.cmd" method="post">
+                    <textarea name="myInput" id="myInput"></textarea><br />
+                    <button type="submit">SUBMIT</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/fontawesome-all.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/main.js" type=""></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116216331-1"></script>
+</body>
+</html>

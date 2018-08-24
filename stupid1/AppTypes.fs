@@ -9,7 +9,8 @@ open Newtonsoft.Json.Linq
 
 type NameIntPairType = {Name:string;Number:int}
 // type shim
-type NameIntPairJson = {Name:string;Number:string}
+type NameIntPairTypeJson = {Name:string;Number:string} with
+    member self.ToTextLine() = self.Name + "=" + self.Number + OSNewLine
 type OptionExampleFileLineType = 
     private {[<JsonPropertyAttribute>] NameIntPair:NameIntPairType} with
     static member FromKVPairString (kv:System.Collections.Generic.KeyValuePair<string,int>) =
@@ -29,7 +30,7 @@ type OptionExampleFileLineType =
     static member FromJson (s:string) = 
         try 
             let newJsonIncomingObj
-                =Newtonsoft.Json.JsonConvert.DeserializeObject<NameIntPairJson>(s)
+                =Newtonsoft.Json.JsonConvert.DeserializeObject<NameIntPairTypeJson>(s)
             let tryParseInt = tryParseGeneric<int> (newJsonIncomingObj.Number)
             let name=newJsonIncomingObj.Name
             if tryParseInt.IsNone then None
@@ -54,7 +55,9 @@ type OptionExampleFileLineType =
 // We don't care what's in the Json as much as we care
 // that we can process whatever we can and ignore the rest
 // MUCH different than strongly-type db-type stuff cf Onion
-type OptionExampleFileLinesJson ={OptionExampleFileLines:NameIntPairJson[]}
+type OptionExampleFileLineTypeJson={[<JsonPropertyAttribute>] NameIntPair:NameIntPairTypeJson} with
+    member self.ToTextLine = self.NameIntPair.ToTextLine
+type OptionExampleFileLinesJson ={[<JsonPropertyAttribute>] OptionExampleFileLines:OptionExampleFileLineTypeJson[]}
 #nowarn "0067"
 type OptionExampleFileLinesType = 
     private {[<JsonPropertyAttribute>] OptionExampleFileLines:OptionExampleFileLineType[]} with
@@ -88,8 +91,22 @@ type OptionExampleFileLinesType =
     static member FromStrings (strings:seq<string>) =
         strings |> Seq.map(fun x-> OptionExampleFileLineType.FromString x) |> Seq.choose id |> Seq.toArray |> OptionExampleFileLinesType.FromSeq
     static member FromJsonString (s:string) =
-        let JsonShim=Newtonsoft.Json.JsonConvert.DeserializeObject<OptionExampleFileLinesJson>(s)
-        let JsonStrings = JsonShim.OptionExampleFileLines |> Array.map(fun x->x.Name + "=" + x.Number + OSNewLine)
+        let probablyUsesEscapedPropertyNames(s) =
+            let escapedQuoteRegex=new System.Text.RegularExpressions.Regex("\\\"")
+            escapedQuoteRegex.IsMatch(s) && ((escapedQuoteRegex.Matches(s).Count%2) =0)
+        let webFixedString = 
+            if probablyUsesEscapedPropertyNames(s) 
+                then s.Replace("\\\\\\\"", "")
+                else s
+        //let testJsonDat:OptionExampleFileLinesJson = {OptionExampleFileLines=
+        //    [|
+        //        {NameIntPairJson={Name="a";Number="2"}}
+        //        ;{NameIntPair={Name="b";Number="5"}}
+        //        ;{NameIntPair={Name="a";Number="5"}}
+        //        ;{NameIntPair={Name="b";Number="9"}}
+        //    |]}
+        let JsonShim=Newtonsoft.Json.JsonConvert.DeserializeObject<OptionExampleFileLinesJson>(webFixedString)
+        let JsonStrings = JsonShim.OptionExampleFileLines |> Array.map(fun x->x.ToTextLine())
         OptionExampleFileLinesType.FromStrings(JsonStrings)        
     static member FromJsonStrings (strings:seq<string>) =
         OptionExampleFileLinesType.FromJsonString(

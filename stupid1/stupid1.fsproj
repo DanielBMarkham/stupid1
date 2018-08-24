@@ -32,7 +32,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <StartArguments>cat JsonSample1.testin | ./stupid1.exe -IF:J -OF:J</StartArguments>
+    <StartArguments>cat t.tmp | stupid1.exe -IF:J</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -96,6 +96,15 @@
       <HintPath>..\..\..\..\..\Documents\StandAloneHttpUtility\StandAloneHttpUtility\bin\Debug\StandAloneHttpUtility.dll</HintPath>
     </Reference>
     <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition.Registration">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core">
@@ -114,7 +123,9 @@
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web" />
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml">
       <Private>True</Private>
     </Reference>

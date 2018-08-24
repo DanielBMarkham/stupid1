@@ -1,0 +1,22 @@
+{
+  "OptionExampleFileLines": [
+    {
+      "NameIntPair": {
+        "Name": "a",
+        "Number": 22
+      }
+    },
+    {
+      "NameIntPair": {
+        "Name": "b",
+        "Number": 12
+      }
+    },
+    {
+      "NameIntPair": {
+        "Name": "c",
+        "Number": 21
+      }
+    }
+  ]
+}
